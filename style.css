@@ -1,0 +1,709 @@
+/* =========================
+   THEME VARIABLES
+========================= */
+:root {
+  color-scheme: light dark;
+  --bg-page: #f2f2f7; 
+  --bg-card: #ffffff;
+  --bg-history-card: #fdfdfe; 
+  /* Nieuwe Tag variabelen */
+  --bg-tag: #e5e5ea;         /* Donkerder grijs voor tags */
+  --text-tag: #3a3a3c;       /* Krachtige tekstkleur */
+  --text-main: #1c1c1e;
+  --text-muted: #8e8e93;
+  --accent: #007aff;
+  --border: #d1d1d6;
+  --row-alt: rgba(0, 0, 0, 0.02);
+  --input-bg: #ffffff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.04);
+  --radius: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #020202;
+    --bg-card: #1c1c1e;
+    --bg-history-card: #242426; 
+    /* Dark mode tags: iets lichter dan de kaart voor diepte */
+    --bg-tag: #3a3a3c;         
+    --text-tag: #ffffff;       
+    --text-main: #ffffff;
+    --text-muted: #a1a1a6;
+    --accent: #0a84ff;
+    --border: #38383a;
+    --row-alt: rgba(255, 255, 255, 0.03);
+    --input-bg: #1c1c1e;
+    --shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================
+   BASE LAYOUT
+========================= */
+body {
+  margin: 0 auto;
+  max-width: 1680px;
+  /* padding: BOVEN RECHTS ONDER LINKS */
+  padding: 48px 20px 0 20px; 
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.55;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+/* Ensure the background color still covers the whole screen if the screen is > 1720px */
+html {
+  background: var(--bg-page);
+  width:100%;
+  position:relative;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0px 0 16px 0;
+  border-radius:16px 16px 0 0;
+  padding: 24px 16px 16px 16px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
+
+.workout-card{
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 72px;
+  padding: 26px;
+  box-shadow: var(--shadow);
+}
+
+/* Fix voor de geschiedenis container */
+.history-card {
+  overflow: hidden; /* Zorgt dat niets uit de bocht vliegt */
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 72px;
+  padding: 26px;
+  box-shadow: var(--shadow);
+}
+/* Boven-padding alleen voor workout-cards weghalen (history-card behoudt padding) */
+.workout-card {
+  padding-top: 0;
+}
+
+/* =========================
+   TABLES (JOUW ORIGINELE STIJL)
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* Voegt scrollbar toe als de tabel te breed is op mobiel */
+  -webkit-overflow-scrolling: touch;
+}
+
+th, td { padding: 8px 16px; }
+th { font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+td:first-child, th:first-child { text-align: left; width: 50%; }
+td:not(:first-child), th:not(:first-child) { text-align: left; width: 25%; }
+tbody tr:nth-child(odd) { background: var(--row-alt); }
+
+/* =========================
+   INPUT & BUTTONS
+========================= */
+input {
+  width: 60px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  font-size: 16px;
+  text-align: center;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Verwijder pijltjes bij Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Verwijder pijltjes bij Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.log-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 24px;
+  background: #1f6be6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size:14px;
+  cursor: pointer;
+}
+
+#h2-progression {
+  padding: 24px 0 16px 0;
+}
+
+/* =========================
+   FILTERS & DROPDOWNS (CORRECTE VOLGORDE)
+========================= */
+.filter-group { display: flex; flex-direction: column; gap: 4px; }
+.filter-group label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  display: none; /* labels verbergen: Oefening / Maand / Jaar */
+}
+
+.filter-dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+  align-items: flex-end;
+  width: 100%;        /* vul de volledige card-breedte */
+}
+
+/* =========================
+   HISTORY ENTRIES
+========================= */
+#history-content {
+  width: 100%;
+  display: flex; /* Flexbox is vaak stabieler dan Grid voor verticale lijsten */
+  flex-direction: column;
+  gap: 16px;
+}
+
+.history-entry {
+  width: 100%; /* Forceer binnen de container */
+  background: var(--row-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  /* Verwijder eventuele negatieve margins als die er staan */
+  margin-left: 0;
+  margin-right: 0;
+}
+
+
+/* Update deze sectie in je CSS */
+.history-entry {
+  background: var(--row-alt); /* Gebruikt de lichte tint van je thema */
+  border: 1px solid var(--border) !important; /* Forceert de zichtbare border */
+  border-radius: 12px;
+  padding: 16px;ß
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+
+
+/* De algemene stijl voor select en btn */
+.filter-dashboard select, .modern-btn {
+  height: 40px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+/* Specifieke fix voor het pijltje en de padding */
+.filter-dashboard select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center; 
+  background-size: 14px;
+  padding: 0 38px 0 12px; /* De 38px zorgt voor de ruimte bij de arrow */
+  cursor: pointer;
+}
+
+.modern-btn { width: 100%; font-weight: 600; cursor: pointer; padding: 0 10px; }
+.modern-btn.active { background: var(--text-main) !important; color: var(--bg-card) !important; }
+
+/* WIS HISTORIE KNOP */
+.tertiary-danger {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 20px auto 40px auto;
+  display: block;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+/* Alleen de aanpassingen voor het modal */
+.modal-content {
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: 16px;
+  text-align: center;
+  /* Verbreed naar 420px zodat de tekst past */
+  width: 90%;
+  max-width: 448px; 
+  box-sizing: border-box;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: center; 
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  /* Dit zorgt ervoor dat de tekst nooit naar de volgende regel springt */
+  white-space: nowrap; 
+}
+.modal-buttons button { flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+.cancel-btn { background: var(--row-alt); color: var(--text-main); }
+.confirm-btn { background: #ef4444; color: white; }
+
+
+.delete-button-container {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 1px dashed var(--border); /* Subtiele scheidingslijn */
+  display: flex;
+  justify-content: center;
+  background: transparent; /* Geen achtergrondkleur */
+}
+
+.delete-button-container button {
+  background: none !important;
+  border: none !important;
+  color: var(--text-muted) !important;
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0.5; /* Iets lichter voor die minimalistische look */
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.delete-button-container button:hover {
+  opacity: 1; /* Wordt pas duidelijk zichtbaar bij hover */
+  color: #ef4444 !important; /* Kleurt heel subtiel rood bij hover */
+}
+
+/* =========================
+   MOBILE OPTIMIZATION
+========================= */
+@media (max-width: 480px) {
+  body { 
+    font-size: 14px; 
+    /* We houden hier de 48px aan de bovenkant aan */
+    padding: 0px 10px 0 10px; 
+    margin: 0 auto; 
+  }
+
+  .workout-card { 
+    margin: 48px 10px 96px 10px; 
+    padding: 0 0 16px 0;  /* geen top-padding op mobiel */
+  }
+
+  #h2-progression {
+    padding: 0 0 16px 0;
+  }
+
+/* Update deze sectie */
+@media (max-width: 480px) {
+.history-card {
+    margin: 48px 10px 96px 10px; 
+    padding: 16px 12px; /* We geven de container weer wat binnenruimte */
+    border-radius: var(--radius);
+    border: 1px solid var(--border) !important;
+    overflow: hidden;
+    width: auto; /* Zorgt dat hij binnen de body-padding blijft */
+  }
+
+  /* De individuele logs binnen de container */
+  .history-entry {
+    background: var(--bg-card);
+    width: 100%;       /* Vul de breedte van de container */
+    margin-left: 0;    /* Reset de marges die ze naar buiten duwden */
+    margin-right: 0;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    position: relative;
+    box-sizing: border-box; /* Cruciaal: zorgt dat padding binnen de 100% valt */
+  }
+}
+
+  h1 { font-size: 1.6rem; margin: 16px 12px; }
+
+  .workout-card h2 { 
+    font-size: 1.3rem; 
+    padding: 16px 12px 12px 12px; 
+    margin: 0 0 0 0; 
+  }
+
+  .history-card h2 {
+    font-size: 1.3rem;
+    padding: 14px 8px;
+    margin: 0;
+  }
+
+  
+
+table { 
+    font-size: 14px; 
+    width: 100%;
+    margin: 16px 0 12px 0; /* Verwijder eventuele margins */
+  }
+
+  th, td { 
+    padding: 8px 12px; /* Iets minder padding binnen de cellen zodat tekst niet propt */
+  }
+
+  input { 
+    font-size: 14px; 
+    width: 100%;      /* Laat input de cel vullen */
+    max-width: 55px;  /* Maar nooit breder dan dit */
+    padding: 8px 4px; 
+    box-sizing: border-box; /* Cruciaal: padding telt niet op bij de breedte */
+  }
+  .desktop-only { display: none; }
+
+  .filter-group label { display: none; }
+  .filter-dashboard {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: calc(100%);    /* 8px links + 8px rechts */
+    margin: 24px 0 24px 0;   /* 8px left/right zoals gevraagd */
+    padding: 0;                /* geen extra padding die kan doen “zweven” */
+  }
+
+  #history-content { gap: 16px; }
+
+  /* Knoppen iets smaller maken zodat ze lucht aan zijkanten hebben,
+     maar wel duidelijk binnen de card blijven */
+  .log-button {
+    width: calc(100% - 24px);
+    margin: 16px 12px 0 12px; /* extra verticale ruimte boven de knop */
+  }
+}
+
+.history-entry:hover {
+    border-color: var(--text-muted);
+}
+
+/* Implementatie van de tags */
+.history-date {
+  background: var(--bg-tag);
+  color: var(--text-tag);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700; /* Extra dik voor leesbaarheid */
+  border: 1px solid rgba(0,0,0,0.05);
+  white-space: nowrap;
+}
+
+/* De PR-badge: een bescheiden goud-tintje ipv fel geel */
+.pr-badge {
+  background: transparent;
+  color: #b8860b; 
+  border: 1px solid rgba(184, 134, 11, 0.3);
+  padding: 1px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .history-date-tag {
+    background: #2c2c2e; /* Iets lichter dan de kaart, maar nog steeds donker */
+    color: #efeff4;
+    border-color: #3a3a3c;
+  }
+  
+  .pr-badge {
+    color: #ffd700;
+    border-color: rgba(255, 215, 0, 0.2);
+  }
+}
+
+/* =========================
+   HISTORY GENERATED CONTENT
+========================= */
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.history-workout-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   SUBTIELE TAG STYLING
+========================= */
+
+.history-date-tag {
+  /* Gebruik een heel zachte achtergrondkleur */
+  background: var(--bg-tag);
+  color: var(--text-main); /* Dezelfde kleur als je hoofdtekst voor rust */
+  
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500; /* Medium dikte, niet té zwaar */
+  
+  /* Een subtiele border die net iets donkerder is dan de tag zelf */
+  border: 1px solid var(--border);
+  
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.85; /* Maakt het geheel wat zachter */
+}
+
+.delete-log-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 5px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.delete-log-btn:hover {
+  color: #ff4444;
+}
+
+.history-exercises-list {
+  display: grid;
+  gap: 8px;
+}
+
+/* Zorg dat de rij nooit breder wordt dan de kaart */
+.exercise-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  gap: 8px; /* Ruimte tussen tekst en getallen */
+  width: 100%;
+  overflow: hidden;
+}
+
+/* De naam van de oefening mag inkorten als het moet */
+.exercise-name {
+  flex: 1; /* Pakt alle beschikbare ruimte */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Zet ... als het echt niet past */
+  min-width: 0; /* Cruciaal voor flexbox om te kunnen krimpen */
+}
+
+/* Maak de PR badge compacter zodat hij minder ruimte vreet */
+.pr-star {
+  color: #ffd700;
+  font-size: 0.7rem;
+  background: rgba(255, 215, 0, 0.1); /* Subtiel achtergrondje */
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin-left: 4px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Fix voor de stats aan de rechterkant */
+.exercise-stats {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Zorgt dat de gewichten NOOIT kleiner worden of wegvliegen */
+  text-align: right;
+  min-width: 100px; /* Geeft een vaste plek voor de kg en reps */
+  justify-content: flex-end;
+}
+
+.exercise-reps {
+  width: 35px;
+  opacity: 0.6;
+  margin-right: 10px;
+}
+
+.exercise-weight {
+  width: 40x;
+  text-align: right;
+}
+
+.exercise-weight strong {
+  font-size: 1rem;
+}
+
+.exercise-weight .unit {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-left: -1px;
+}
+
+/* De standaard rij: geen extra padding, zodat tekst links uitlijnt */
+.exercise-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0; /* Alleen verticale ruimte, geen horizontale verschuiving */
+  width: 100%;
+}
+
+/* De PR rij: we gebruiken een negatieve marge en padding die elkaar opheffen */
+.exercise-row.is-pr {
+  background: rgba(255, 212, 0, 0.12); 
+  border-radius: 6px;
+  /* Deze combinatie zorgt dat de kleur uitstekt, maar de tekst blijft staan: */
+  padding: 4px 8px; 
+  margin: 2px -8px; 
+  width: calc(100% + 16px); 
+}
+
+@media (prefers-color-scheme: dark) {
+  .exercise-row.is-pr {
+    background: rgba(255, 212, 0, 0.08);
+  }
+}
+
+
+/* Plan Manager layout */
+.plan-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.plan-row {
+  display: grid;
+  grid-template-columns: 2fr auto auto;
+  gap: 8px;
+}
+
+
+
+#plan-name {
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 12px;
+  background: var(--input-bg);
+  color: var(--text-main);
+
+  min-width: 320px;     
+  width: 100%;        
+}
+
+
+/* Plan Manager: zorg dat 'Verwijder dit schema' inline in de grid blijft */
+#plan-manager .tertiary-danger {
+  display: inline-block;
+  margin: 0;              /* laat de grid de ruimte bepalen */
+  width: auto;            /* dezelfde breedte-logica als de andere knoppen */
+}
+
+
+
+/* Mobile behoud je bestaande 1-koloms stroom; niets extra nodig */
+@media (max-width: 480px) {
+  .plan-row {
+    grid-template-columns: 1fr; 
+  }
+  #plan-name {
+    min-width: 0;      
+    width: 100%;
+  }
+}
+
+
+/* ---- Plan Manager: select consistent met andere velden ---- */
+#plan-select {
+  height: 40px;
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 14px;
+  padding: 0 38px 0 12px;
+  cursor: pointer;
+
+  /* native pijltje verbergen + custom arrow */
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
+/* Zelfde hover/focus gevoel als je inputs/selects */
+#plan-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(10,132,255,0.15); /* subtiele focusring (matched accent) */
+  border-color: var(--accent);
+}

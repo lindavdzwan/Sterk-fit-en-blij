@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sterk, fit en blij</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+ <!-- Simple emoji favicon (safer encoding) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💪</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22white%22/><text y=%22.85em%22 x=%225%22 font-size=%2280%22>💪</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Workout">
+  </head>
+<body>
+
+<!-- ================= PLAN MANAGER ================= -->
+<div class="workout-card" id="plan-manager">
+  <h2>Schema’s 📚</h2>
+  <div class="plan-grid">
+    <div class="plan-row">
+      <input id="plan-name" placeholder="Naam">
+      <button class="modern-btn" style="grid-column: 3" onclick="saveCurrentPlan()">Sla huidig schema op</button>
+    </div>
+    <div class="plan-row">
+      <select id="plan-select"></select>
+      <button class="modern-btn" onclick="loadSelectedPlan()">Laad schema</button>
+      <button class="modern-btn tertiary-danger" onclick="deleteSelectedPlan()">Verwijder dit schema</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= UPPER A ================= -->
+<div class="workout-card">
+  <h2>Upper A 🔥</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Exercise</th>
+          <th>Set/Rep</th>
+          <th>Weight</th>
+          <th class="desktop-only">Type</th>
+          <th class="desktop-only">Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Bench Press</td><td><input data-key="upperA-bench-reps" value="2x8"></td><td><input type="number" data-key="upperA-bench-kg" value="14"></td><td class="desktop-only">Compound</td><td class="desktop-only">Chest</td></tr>
+        <tr><td>Pull-Ups</td><td><input data-key="upperA-pull-reps" value="2x8"></td><td><input type="number" data-key="upperA-pull-kg" placeholder="body"></td><td class="desktop-only">Compound</td><td class="desktop-only">Lats</td></tr>
+        <tr><td>Chest Support Row</td><td><input data-key="upperA-row-reps" value="3x10"></td><td><input type="number" data-key="upperA-row-kg" value="14"></td><td class="desktop-only">Compound</td><td class="desktop-only">Lats</td></tr>
+        <tr>
+          <td>Dumbbell Pullover</td>
+          <td><input data-key="upperA-pullover-reps" value="2x10"></td>
+          <td><input type="number" data-key="upperA-pullover-kg" value="12"></td>
+          <td class="desktop-only">Isolation</td>
+          <td class="desktop-only">Lats</td>
+        </tr>
+        <tr><td>Incline Fly</td><td><input data-key="upperA-fly-reps" value="2x10"></td><td><input type="number" data-key="upperA-fly-kg" value="10"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Chest</td></tr>
+        <tr><td>Lateral Raises</td><td><input data-key="upperA-lateral-reps" value="2x10"></td><td><input type="number" data-key="upperA-lateral-kg" value="6"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Shoulder</td></tr>
+        <tr><td>Overhead Extension</td><td><input data-key="upperA-triceps-reps" value="2x10"></td><td><input type="number" data-key="upperA-triceps-kg" value="8"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Tricep</td></tr>
+        <tr><td>Incline Bicep Curl</td><td><input data-key="upperA-biceps-reps" value="2x10"></td><td><input type="number" data-key="upperA-biceps-kg" value="10"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Bicep</td></tr>
+      </tbody>
+    </table>
+    <button class="log-button" onclick="logWorkoutSesssie(this)">Opslaan</button>
+  </div>
+</div>
+
+<!-- ================= LEGS ================= -->
+<div class="workout-card">
+  <h2>Legs 😭</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Exercise</th>
+          <th>Set/Rep</th>
+          <th>Weight</th>
+          <th class="desktop-only">Type</th>
+          <th class="desktop-only">Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Goblet Squat</td><td><input data-key="legs-goblet-reps" value="2x10"></td><td><input type="number" data-key="legs-goblet-kg" value="20"></td><td class="desktop-only">Compound</td><td class="desktop-only">Quads</td></tr>
+        <tr><td>Romanian Deadlift</td><td><input data-key="legs-rdl-reps" value="2x10"></td><td><input type="number" data-key="legs-rdl-kg" value="20"></td><td class="desktop-only">Compound</td><td class="desktop-only">Hamstrings</td></tr>
+        <tr><td>Bulgarian Split Squat</td><td><input data-key="legs-bulgarian-reps" value="2x10"></td><td><input type="number" data-key="legs-bulgarian-kg" value="14"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Quads</td></tr>
+        <tr><td>Hamstring Curl</td><td><input data-key="legs-curl-reps" value="2x10"></td><td><input type="number" data-key="legs-curl-kg" value="10"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Hamstrings</td></tr>
+        <tr><td>Calf Raises</td><td><input data-key="legs-calf-reps" value="2x10"></td><td><input type="number" data-key="legs-calf-kg" value="16"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Calves</td></tr>
+        <tr><td>Decline Sit-Up</td><td><input data-key="legs-abs-reps" value="2x20"></td><td><input type="number" data-key="legs-abs-kg" value="8"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Abs</td></tr>
+      </tbody>
+    </table>
+   <button class="log-button" onclick="logWorkoutSesssie(this)">Opslaan</button>
+  </div>
+</div>
+
+<!-- ================= UPPER B ================= -->
+<div class="workout-card">
+  <h2>Upper B 🐝</h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Exercise</th>
+          <th>Set/Rep</th>
+          <th>Weight</th>
+          <th class="desktop-only">Type</th>
+          <th class="desktop-only">Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Incline Bench Press</td><td><input data-key="upperB-incline-reps" value="3x8"></td><td><input type="number" data-key="upperB-incline-kg" value="14"></td><td class="desktop-only">Compound</td><td class="desktop-only">Chest</td></tr>
+        <tr><td>Chin-Ups</td><td><input data-key="upperB-chin-reps" value="3x8"></td><td><input type="number" data-key="upperB-chin-kg" placeholder="body"></td><td class="desktop-only">Compound</td><td class="desktop-only">Lats</td></tr>
+        <tr><td>Close Grip Press</td><td><input data-key="upperB-close-reps" value="3x10"></td><td><input type="number" data-key="upperB-close-kg" value="12"></td><td class="desktop-only">Compound</td><td class="desktop-only">Tricep</td></tr>
+        <tr><td>Chest Support Row</td><td><input data-key="upperB-row-reps" value="3x10"></td><td><input type="number" data-key="upperB-row-kg" value="16"></td><td class="desktop-only">Compound</td><td class="desktop-only">Lats</td></tr>
+        <tr><td>Rear Delt Fly</td><td><input data-key="upperB-rear-reps" value="2x10"></td><td><input type="number" data-key="upperB-rear-kg" value="8"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Shoulder</td></tr>
+        <tr><td>Skull Crusher</td><td><input data-key="upperB-triceps-reps" value="2x10"></td><td><input type="number" data-key="upperB-triceps-kg" value="8"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Tricep</td></tr>
+        <tr><td>Incline Hammer Curl</td><td><input data-key="upperB-biceps-reps" value="2x10"></td><td><input type="number" data-key="upperB-biceps-kg" value="8"></td><td class="desktop-only">Isolation</td><td class="desktop-only">Bicep</td></tr>
+      </tbody>
+    </table>
+    <button class="log-button" onclick="logWorkoutSesssie(this)">Opslaan</button>
+  </div>
+</div>
+
+
+<div class="workout-card history-card">
+  <h2 id="h2-progression">Progression</h2>
+  
+  <div class="filter-dashboard">
+    <div class="filter-group">
+      <label>Oefening</label>
+      <select id="filter-exercise" onchange="renderHistory()"></select>
+    </div>
+
+    <div class="filter-group">
+      <label>Maand</label>
+      <select id="filter-month" onchange="renderHistory()">
+        <option value="all">Alle Maanden</option>
+        <option value="0">Januari</option>
+        <option value="1">Februari</option>
+        <option value="2">Maart</option>
+        <option value="3">April</option>
+        <option value="4">Mei</option>
+        <option value="5">Juni</option>
+        <option value="6">Juli</option>
+        <option value="7">Augustus</option>
+        <option value="8">September</option>
+        <option value="9">Oktober</option>
+        <option value="10">November</option>
+        <option value="11">December</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Jaar</label>
+      <select id="filter-year" onchange="renderHistory()">
+        <option value="all">Alle Jaren</option>
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+    </div>
+
+    <button onclick="togglePR()" id="pr-button" class="modern-btn">
+    Show Records 🏆
+    </button> 
+  </div>
+
+  <div id="history-content"></div>
+</div>
+
+<!-- ================= PR OVERVIEW ================= -->
+<div class="workout-card" id="pr-overview-card">
+  <h2>PR-overzicht 🏆</h2>
+  <div id="pr-overview"></div>
+</div>
+
+<div class="delete-button-container" style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed var(--border);">
+    <button onclick="setupClearAll()" style="...">
+    🗑️ Wis alle historie
+  </button>
+</div>
+
+<div id="deleteModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h3>Historie wissen?</h3>
+        <p>Weet je het zeker? Al je opgeslagen trainingen worden definitief verwijderd. Dit kan niet ongedaan worden gemaakt.</p>
+        <div class="modal-buttons">
+            <button onclick="closeDeleteModal()" class="cancel-btn">Annuleren</button>
+            <button onclick="confirmDeletion()" class="confirm-btn">Verwijder</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js">
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+  }
+</script>
+
+</body>
+</html>
